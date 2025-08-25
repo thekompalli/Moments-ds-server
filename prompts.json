@@ -1,0 +1,25 @@
+{
+  "task_splitter": {
+    "primary_prompt": "Extract all tasks mentioned in this text.\n\nA task is anything the person needs to do, including:\n- Appointments (\"I have an appointment\")\n- Activities (\"I need to go to yoga\")\n- Responsibilities (\"I have to do homework\")\n- Medications (\"I have to take tablets\")\n\nText: \"{text}\"\n\nReturn ONLY a JSON array of strings, where each string is a complete task with all its details (what, when, where, etc.)\nExample format: [\"Task 1 with details\", \"Task 2 with details\"]",
+    
+    "alternative_prompt": "Analyze this text and extract all the tasks, appointments, or to-dos that need to be completed.\n\nText: \"{text}\"\n\nFormat each task as a separate item in a numbered list:\n1. [Task 1]\n2. [Task 2]\n3. [Task 3]\n...",
+    
+    "task_detection_prompt": "Analyze if the following text contains any tasks, appointments, or actions that someone needs to complete.\n\nTasks include:\n- Scheduled appointments (e.g., \"I have an appointment at 9am\")\n- Things someone needs to do (e.g., \"I need to buy groceries\")\n- Actions with deadlines (e.g., \"homework before 10pm\")\n- Reminders (e.g., \"take medication at 2pm\")\n\nText: \"{text}\"\n\nAnswer with only \"CONTAINS_TASKS\" if the text includes one or more tasks, or \"NO_TASKS\" if it doesn't."
+  },
+  
+  "entity_extractor": {
+    "entity_extraction_prompt": "Extract the following information from this task description.\n\nTask description: \"{task_text}\"\nCurrent date: {current_date}\n\nIdentify:\n1. The main task (what needs to be done, without time/date details)\n2. Any specific time mentioned (in 24-hour format HH:MM)\n3. Any specific date mentioned (in YYYY-MM-DD format)\n4. Any additional description or details\n\nFormat your response ONLY as a JSON object with these fields:\n- task_title: The main task without time/date details (e.g., \"Appointment\", \"Take tablets\")\n- due_date: The date in YYYY-MM-DD format, use {current_date} if the task is for today\n- due_time: The time in HH:MM format (24-hour), or null if no time specified\n- description: Any additional details about the task, or null if none\n\nExample:\nFor \"I have an appointment at 9 a.m. in the morning\", your response should be:\n{{\"task_title\": \"Appointment\", \"due_date\": \"{current_date}\", \"due_time\": \"09:00\", \"description\": \"in the morning\"}}"
+    },
+  
+  "task_categorizer": {
+    "categorization_prompt": "Categorize this pregnancy-related task into one of these categories:\n- must-do: Essential tasks related to health, medical appointments, or critical pregnancy needs\n- self-care: Tasks focused on wellness, relaxation, mental health, or physical comfort\n- optional: Tasks that are helpful but not critical, and could be postponed if needed\n\nTask title: {task_title}\nTask description: {task_description}\nCurrent trimester: {trimester}\nCurrent pregnancy week: {pregnancy_week}\n\nExamples:\n- \"Doctor appointment\" should be categorized as \"must-do\"\n- \"Take medication\" should be categorized as \"must-do\"\n- \"Yoga class\" should be categorized as \"self-care\"\n- \"Relaxation time\" should be categorized as \"self-care\"\n- \"Buy baby clothes\" should be categorized as \"optional\"\n\nRespond with a JSON object containing:\n- category: The category name (must-do, self-care, or optional)\n- confidence: A confidence score between 0 and 1\n- explanation: Brief explanation for the categorization"
+  },
+  
+  "energy_estimator": {
+    "energy_estimation_prompt": "Estimate the energy level required for this pregnancy-related task:\n- high: Tasks requiring significant physical exertion, mental focus, or emotional energy\n- medium: Tasks requiring moderate activity or attention that may cause mild fatigue\n- low: Tasks requiring minimal physical effort or mental concentration\n\nTask title: {task_title}\nTask description: {task_description}\nEstimated time: {estimated_minutes} minutes\nCurrent trimester: {trimester}\n\nConsider the pregnancy stage and how it affects energy levels. For example:\n- Taking medication is typically a low-energy task\n- A doctor appointment is usually a medium-energy task\n- Exercise or lengthy activities are high-energy tasks\n\nRespond with a JSON object containing:\n- energy_level: The energy level (high, medium, or low)\n- confidence: A confidence score between 0 and 1\n- estimated_minutes: Your estimate of how long this task typically takes"
+  },
+  
+  "debug": {
+    "direct_extraction_prompt": "Analyze this text and identify all the tasks or appointments mentioned:\n\n\"{text}\"\n\nFormat your response as a JSON array of task strings:\n[\n  \"Appointment at 9 a.m. in the morning\",\n  \"Take tablets around 2 p.m.\",\n  \"Go to yoga at 6 p.m. for one hour\",\n  \"Do homework before 10 p.m.\"\n]"
+  }
+}
